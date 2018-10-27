@@ -42,7 +42,7 @@ export default{
     toggleTitleAndMenu () {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
       if (!this.ifTitleAndMenuShow) {
-        this.$refs.MenuBar.hideSetting()
+        this.$refs.menuBar.hideSetting()
       }
     },
     prevPage () {
