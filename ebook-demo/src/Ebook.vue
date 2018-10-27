@@ -9,7 +9,7 @@
           <div class="right" @click="nextPage"></div>
       </div>
     </div>
-    <menu-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" ref="menuBar"></menu-bar>
+    <menu-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" :fontSizeList="fontSizeList" ref="menuBar"></menu-bar>
   </div>
 </template>
 
@@ -26,13 +26,22 @@ export default{
   },
   data () {
     return {
-      ifTitleAndMenuShow: false
+      ifTitleAndMenuShow: false,
+      fontSizeList: [
+        { fontSize: 12 },
+        { fontSize: 14 },
+        { fontSize: 16 },
+        { fontSize: 18 },
+        { fontSize: 20 },
+        { fontSize: 22 },
+        { fontSize: 24 }
+      ]
     }
   },
   methods: {
     toggleTitleAndMenu () {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
-      if (this.ifTitleAndMenuShow) {
+      if (!this.ifTitleAndMenuShow) {
         this.$refs.MenuBar.hideSetting()
       }
     },
