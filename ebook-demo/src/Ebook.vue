@@ -9,7 +9,7 @@
           <div class="right" @click="nextPage"></div>
       </div>
     </div>
-    <menu-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" :fontSizeList="fontSizeList" ref="menuBar"></menu-bar>
+    <menu-bar @setFontSize="setFontSize" :defaultFontSize="defaultFontSize" :ifTitleAndMenuShow="ifTitleAndMenuShow" :fontSizeList="fontSizeList" ref="menuBar"></menu-bar>
   </div>
 </template>
 
@@ -35,10 +35,17 @@ export default{
         { fontSize: 20 },
         { fontSize: 22 },
         { fontSize: 24 }
-      ]
+      ],
+      defaultFontSize: 16
     }
   },
   methods: {
+    setFontSize (fontSize) {
+      if (this.themes) {
+        this.defaultFontSize = fontSize
+        this.themes.fontSize(fontSize + 'px')
+      }
+    },
     toggleTitleAndMenu () {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
       if (!this.ifTitleAndMenuShow) {
@@ -62,6 +69,8 @@ export default{
         height: window.innerHeight
       })
       this.rendition.display()
+      this.themes = this.rendition.themes
+      this.setFontSize(this.defaultFontSize)
     }
   },
   mounted () {
