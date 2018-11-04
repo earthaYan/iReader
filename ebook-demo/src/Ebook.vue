@@ -9,7 +9,7 @@
           <div class="right" @click="nextPage"></div>
       </div>
     </div>
-    <menu-bar @setTheme="setTheme" @setFontSize="setFontSize" :themeList="themeList" :defaultTheme="defaultTheme" :defaultFontSize="defaultFontSize" :ifTitleAndMenuShow="ifTitleAndMenuShow" :fontSizeList="fontSizeList" ref="menuBar"></menu-bar>
+    <menu-bar @jumpTo="jumpTo" @onProgressChange="onProgressChange"  @setTheme="setTheme" @setFontSize="setFontSize" :navigation="navigation" :bookAvailable="bookAvailable" :themeList="themeList" :defaultTheme="defaultTheme" :defaultFontSize="defaultFontSize" :ifTitleAndMenuShow="ifTitleAndMenuShow" :fontSizeList="fontSizeList" ref="menuBar"></menu-bar>
   </div>
 </template>
 
@@ -75,10 +75,26 @@ export default{
           }
         }
       ],
-      defaultTheme: 0
+      defaultTheme: 0,
+      bookAvailable: false,
+      navigation: {}
     }
   },
   methods: {
+    jumpTo  (href) {
+      this.rendition.display(href)
+      this.hideTitleAndMenu()
+    },
+    hideTitleAndMenu () {
+      this.ifTitleAndMenuShow = false
+      this.$refs.menuBar.hideSetting()
+      this.$refs.menuBar.hideContent()
+    },
+    onProgressChange (progress) {
+      const percentage = progress / 100
+      const location = percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0
+      this.rendition.display(location)
+    },
     setTheme (index) {
       this.themes.select(this.themeList[index].name)
       this.defaultTheme = index
@@ -120,7 +136,14 @@ export default{
       this.themes = this.rendition.themes
       this.setFontSize(this.defaultFontSize)
       this.registerTheme()
-      this.themes.select(this.defaultTheme)
+      this.setTheme(this.defaultTheme)
+      this.book.ready.then(() => {
+        this.navigation = this.book.navigation
+        return this.book.locations.generate()
+      }).then(result => {
+        this.locations = this.book.locations
+        this.bookAvailable = true
+      })
     }
   },
   mounted () {
